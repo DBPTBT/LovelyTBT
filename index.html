@@ -2,20 +2,12 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Trình phát YouTube tự động reload</title>
+  <title>Trình phát YouTube tự động</title>
   <style>
     body {
       font-family: sans-serif;
       text-align: center;
       padding: 30px;
-    }
-    input {
-      width: 300px;
-      padding: 8px;
-    }
-    button {
-      padding: 8px 16px;
-      margin-left: 8px;
     }
     #player {
       margin-top: 20px;
@@ -24,10 +16,7 @@
 </head>
 <body>
 
-  <h2>Nhập link YouTube để phát</h2>
-  <input type="text" id="videoUrl" placeholder="Dán link YouTube vào đây">
-  <button onclick="loadVideo()">Xác nhận</button>
-
+  <h2>Trình phát YouTube tự động</h2>
   <div id="player"></div>
 
   <!-- Load API YouTube -->
@@ -36,23 +25,12 @@
   <script>
     let player;
 
-    function extractVideoId(url) {
-      const match = url.match(/(?:v=|youtu\.be\/)([\w-]{11})/);
-      return match ? match[1] : null;
+    // Gán videoId mặc định vào localStorage nếu chưa có
+    const defaultVideoId = 'ja9M5ACMBEQ'; // Bạn có thể thay videoId này
+    if (!localStorage.getItem('youtubeVideoId')) {
+      localStorage.setItem('youtubeVideoId', defaultVideoId);
     }
 
-    function loadVideo() {
-      const url = document.getElementById('https://www.youtube.com/watch?v=ja9M5ACMBEQ').value;
-      const videoId = extractVideoId(url);
-      if (videoId) {
-        localStorage.setItem('youtubeVideoId', videoId);
-        location.reload();
-      } else {
-        alert("Vui lòng nhập một link YouTube hợp lệ.");
-      }
-    }
-
-    // Hàm global được YouTube gọi khi API sẵn sàng
     function onYouTubeIframeAPIReady() {
       const savedId = localStorage.getItem('youtubeVideoId');
       if (savedId) {
@@ -60,8 +38,15 @@
           height: '390',
           width: '640',
           videoId: savedId,
+          playerVars: {
+            autoplay: 1,  // Tự động phát
+            controls: 1,
+          },
           events: {
-            'onStateChange': function(event) {
+            'onReady': function (event) {
+              event.target.playVideo();
+            },
+            'onStateChange': function (event) {
               if (event.data === YT.PlayerState.ENDED) {
                 location.reload();
               }
