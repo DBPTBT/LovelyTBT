@@ -11,12 +11,13 @@
     }
     #player {
       margin-top: 20px;
+      display: inline-block;
     }
   </style>
 </head>
 <body>
 
-  <h2>Trình phát YouTube tự động</h2>
+  <h2>Trình phát YouTube</h2>
   <div id="player"></div>
 
   <!-- Load API YouTube -->
@@ -24,35 +25,45 @@
 
   <script>
     let player;
+    const defaultVideoId = 'ja9M5ACMBEQ';
 
-    // Gán videoId mặc định vào localStorage nếu chưa có
-    const defaultVideoId = 'ja9M5ACMBEQ'; // Bạn có thể thay videoId này
+    // Gán video mặc định nếu chưa có
     if (!localStorage.getItem('youtubeVideoId')) {
       localStorage.setItem('youtubeVideoId', defaultVideoId);
     }
 
+    // YouTube sẽ gọi hàm này khi API sẵn sàng
     function onYouTubeIframeAPIReady() {
       const savedId = localStorage.getItem('youtubeVideoId');
-      if (savedId) {
-        player = new YT.Player('player', {
-          height: '390',
-          width: '640',
-          videoId: savedId,
-          playerVars: {
-            autoplay: 1,  // Tự động phát
-            controls: 1,
-          },
-          events: {
-            'onReady': function (event) {
-              event.target.playVideo();
-            },
-            'onStateChange': function (event) {
-              if (event.data === YT.PlayerState.ENDED) {
-                location.reload();
-              }
-            }
-          }
-        });
+      player = new YT.Player('player', {
+        height: '390',
+        width: '640',
+        videoId: savedId,
+        playerVars: {
+          autoplay: 0,
+          controls: 1,
+        },
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      // Nếu đã từng phát trước đó, tự động phát lại
+      const hasPlayedBefore = localStorage.getItem('hasPlayedBefore');
+      if (hasPlayedBefore === 'true') {
+        event.target.playVideo();
+      }
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        localStorage.setItem('hasPlayedBefore', 'true');
+      }
+      if (event.data === YT.PlayerState.ENDED) {
+        location.reload();
       }
     }
   </script>
