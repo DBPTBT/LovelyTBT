@@ -19,21 +19,21 @@
 <body>
 
   <h2>Trình phát YouTube</h2>
-  <div id="player"></div>
+  <div id="player"></div> <!-- Để trống, API sẽ tự tạo iframe -->
 
   <!-- Tải API YouTube -->
   <script src="https://www.youtube.com/iframe_api"></script>
 
   <script>
     let player;
-    const defaultVideoId = 'ja9M5ACMBEQ'; // Thay đổi ID nếu muốn phát video khác
+    const defaultVideoId = 'ja9M5ACMBEQ'; // ID của video mặc định
 
-    // Lưu videoId mặc định nếu chưa có
+    // Nếu chưa có videoId nào được lưu → dùng mặc định
     if (!localStorage.getItem('youtubeVideoId')) {
       localStorage.setItem('youtubeVideoId', defaultVideoId);
     }
 
-    // Hàm được YouTube API gọi khi sẵn sàng
+    // API YouTube sẽ gọi hàm này khi đã sẵn sàng
     function onYouTubeIframeAPIReady() {
       const savedId = localStorage.getItem('youtubeVideoId');
       player = new YT.Player('player', {
@@ -41,7 +41,7 @@
         width: '640',
         videoId: savedId,
         playerVars: {
-          autoplay: 0,
+          autoplay: 0, // autoplay = 0 để tránh bị chặn lần đầu
           controls: 1
         },
         events: {
@@ -51,7 +51,6 @@
       });
     }
 
-    // Tự động phát nếu đã từng phát trước đó
     function onPlayerReady(event) {
       const hasPlayedBefore = localStorage.getItem('hasPlayedBefore');
       if (hasPlayedBefore === 'true') {
@@ -59,7 +58,6 @@
       }
     }
 
-    // Ghi lại trạng thái đã phát để lần sau tự động
     function onPlayerStateChange(event) {
       if (event.data === YT.PlayerState.PLAYING) {
         localStorage.setItem('hasPlayedBefore', 'true');
