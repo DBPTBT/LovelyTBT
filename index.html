@@ -8,6 +8,7 @@
       font-family: sans-serif;
       text-align: center;
       padding: 30px;
+      background-color: #f9f9f9;
     }
     #player {
       margin-top: 20px;
@@ -20,50 +21,54 @@
   <h2>Trình phát YouTube</h2>
   <div id="player"></div>
 
-  <!-- Load API YouTube -->
+  <!-- Tải API YouTube -->
   <script src="https://www.youtube.com/iframe_api"></script>
 
   <script>
-  let player;
-  const defaultVideoId = 'ja9M5ACMBEQ';
+    let player;
+    const defaultVideoId = 'ja9M5ACMBEQ'; // Thay đổi ID nếu muốn phát video khác
 
-  if (!localStorage.getItem('youtubeVideoId')) {
-    localStorage.setItem('youtubeVideoId', defaultVideoId);
-  }
+    // Lưu videoId mặc định nếu chưa có
+    if (!localStorage.getItem('youtubeVideoId')) {
+      localStorage.setItem('youtubeVideoId', defaultVideoId);
+    }
 
-  function onYouTubeIframeAPIReady() {
-    const savedId = localStorage.getItem('youtubeVideoId');
-    player = new YT.Player('player', {
-      height: '390',
-      width: '640',
-      videoId: savedId,
-      playerVars: {
-        autoplay: 0,
-        controls: 1,
-      },
-      events: {
-        onReady: onPlayerReady,
-        onStateChange: onPlayerStateChange
+    // Hàm được YouTube API gọi khi sẵn sàng
+    function onYouTubeIframeAPIReady() {
+      const savedId = localStorage.getItem('youtubeVideoId');
+      player = new YT.Player('player', {
+        height: '390',
+        width: '640',
+        videoId: savedId,
+        playerVars: {
+          autoplay: 0,
+          controls: 1
+        },
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange
+        }
+      });
+    }
+
+    // Tự động phát nếu đã từng phát trước đó
+    function onPlayerReady(event) {
+      const hasPlayedBefore = localStorage.getItem('hasPlayedBefore');
+      if (hasPlayedBefore === 'true') {
+        event.target.playVideo();
       }
-    });
-  }
+    }
 
-  function onPlayerReady(event) {
-    const hasPlayedBefore = localStorage.getItem('hasPlayedBefore');
-    if (hasPlayedBefore === 'true') {
-      event.target.playVideo();
+    // Ghi lại trạng thái đã phát để lần sau tự động
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        localStorage.setItem('hasPlayedBefore', 'true');
+      }
+      if (event.data === YT.PlayerState.ENDED) {
+        location.reload();
+      }
     }
-  }
-
-  function onPlayerStateChange(event) {
-    if (event.data === YT.PlayerState.PLAYING) {
-      localStorage.setItem('hasPlayedBefore', 'true');
-    }
-    if (event.data === YT.PlayerState.ENDED) {
-      location.reload();
-    }
-  }
-</script>
+  </script>
 
 </body>
 </html>
