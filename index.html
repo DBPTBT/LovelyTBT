@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Trình phát YouTube</title>
+  <title>Yêu Thương Thiều Bảo Trâm Rất Rất Nhiều ❤️</title>
   <style>
     body {
       margin: 0;
@@ -29,62 +29,25 @@
       padding-top: 20px;
     }
 
-    #player {
+    .video-wrapper {
       position: relative;
       z-index: 1;
-      margin-left: 30px;
-      width: 640px;
-      height: 390px;
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h2>Trình phát YouTube</h2>
-  <div id="player"></div>
+  <h2>Yêu Thương Thiều Bảo Trâm Rất Rất Nhiều ❤️</h2>
 
-  <!-- YouTube API -->
-<!-- <script src="https://www.youtube.com/iframe_api"></script>
-  <script>
-    let player;
-    const videoId = "d9j9MSACM8E";
-
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        height: '390',
-        width: '640',
-        videoId: videoId,
-        playerVars: {
-          autoplay: localStorage.getItem("playedBefore") === "true" ? 1 : 0,
-          controls: 1,
-        },
-        events: {
-          onReady: onPlayerReady,
-          onStateChange: onPlayerStateChange
-        }
-      });
-    }
-
-    
-
-
-    function onPlayerReady(event) {
-      // Có thể thêm lệnh nếu muốn tự động play hoặc chỉnh âm lượng
-    }
-
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.PLAYING) {
-        localStorage.setItem("playedBefore", "true");
-      }
-      if (event.data === YT.PlayerState.ENDED) {
-        location.reload();
-      }
-    }
-  </script> -->
-<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-title="YouTube video player" frameborder="0" 
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-
+  <div class="video-wrapper">
+    <iframe width="640" height="390"
+      src="https://www.youtube.com/embed/ja9M5ACMBEQ"
+      title="YouTube video player" frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+    </iframe>
+  </div>
 </body>
 </html>
