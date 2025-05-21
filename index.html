@@ -1,72 +1,79 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Yêu Thương Thiều Bảo Trâm vô bờ bến ❤️ </title>
+  <meta charset="UTF-8" />
+  <title>Trình phát YouTube</title>
   <style>
     body {
+      margin: 0;
+      padding: 0;
       font-family: sans-serif;
-      text-align: center;
-      padding: 30px;
-      background-color: #f9f9f9;
+      background: url("ay-ts1b-1655200408811-16552004117671042602050.webp") no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
     }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.3); /* mờ nhẹ để dễ đọc chữ */
+      z-index: 0;
+    }
+
+    h2 {
+      text-align: center;
+      color: white;
+      position: relative;
+      z-index: 1;
+      padding-top: 20px;
+    }
+
     #player {
-      margin-top: 20px;
-      display: inline-block;
+      position: relative;
+      z-index: 1;
+      margin-left: 30px; /* lệch sang trái */
+      width: 640px;
+      height: 390px;
     }
   </style>
 </head>
 <body>
+  <h2>Trình phát YouTube</h2>
+  <div id="player"></div>
 
-  <h2>Yêu Thương Thiều Bảo Trâm vô bờ bến ❤️</h2>
-  <div id="player"></div> <!-- YouTube sẽ gắn iframe vào đây -->
-
-  <!-- Tải API YouTube -->
+  <!-- Load YouTube IFrame Player API -->
   <script src="https://www.youtube.com/iframe_api"></script>
-
   <script>
     let player;
-    const defaultVideoId = 'ja9M5ACMBEQ'; // Thay bằng video ID bạn muốn
+    const videoId = "d9j9MSACM8E";
 
-    // Lưu video ID mặc định nếu chưa có
-    if (!localStorage.getItem('youtubeVideoId')) {
-      localStorage.setItem('youtubeVideoId', defaultVideoId);
-    }
-
-    // Hàm này sẽ được gọi khi YouTube API đã sẵn sàng
     function onYouTubeIframeAPIReady() {
-      const videoId = localStorage.getItem('youtubeVideoId');
-      player = new YT.Player('player', {
-        height: '390',
-        width: '640',
+      player = new YT.Player("player", {
+        height: "390",
+        width: "640",
         videoId: videoId,
         playerVars: {
-          autoplay: 0, // 0 để tránh bị chặn autoplay
-          controls: 1
+          autoplay: localStorage.getItem("playedBefore") === "true" ? 1 : 0,
+          controls: 1,
         },
         events: {
-          onReady: onPlayerReady,
-          onStateChange: onPlayerStateChange
-        }
+          onStateChange: onPlayerStateChange,
+          onReady: function () {
+            // Có thể thêm xử lý nếu cần
+          },
+        },
       });
-    }
-
-    function onPlayerReady(event) {
-      const hasPlayed = localStorage.getItem('hasPlayedBefore');
-      if (hasPlayed === 'true') {
-        event.target.playVideo();
-      }
     }
 
     function onPlayerStateChange(event) {
       if (event.data === YT.PlayerState.PLAYING) {
-        localStorage.setItem('hasPlayedBefore', 'true');
+        localStorage.setItem("playedBefore", "true");
       }
       if (event.data === YT.PlayerState.ENDED) {
         location.reload();
       }
     }
   </script>
-
 </body>
 </html>
