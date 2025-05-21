@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Trình phát YouTube</title>
   <style>
     body {
       margin: 0;
       padding: 0;
       font-family: sans-serif;
-      background: url("ay-ts1b-1655200408811-16552004117671042602050.webp") no-repeat center center fixed;
+      background: url("assets/ay-ts1b-1655200408811-16552004117671042602050.webp") no-repeat center center fixed;
       background-size: cover;
       position: relative;
     }
@@ -17,7 +17,7 @@
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.3); /* mờ nhẹ để dễ đọc chữ */
+      background: rgba(0, 0, 0, 0.4);
       z-index: 0;
     }
 
@@ -32,7 +32,7 @@
     #player {
       position: relative;
       z-index: 1;
-      margin-left: 30px; /* lệch sang trái */
+      margin-left: 30px;
       width: 640px;
       height: 390px;
     }
@@ -42,28 +42,30 @@
   <h2>Trình phát YouTube</h2>
   <div id="player"></div>
 
-  <!-- Load YouTube IFrame Player API -->
+  <!-- YouTube API -->
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     let player;
     const videoId = "d9j9MSACM8E";
 
     function onYouTubeIframeAPIReady() {
-      player = new YT.Player("player", {
-        height: "390",
-        width: "640",
+      player = new YT.Player('player', {
+        height: '390',
+        width: '640',
         videoId: videoId,
         playerVars: {
           autoplay: localStorage.getItem("playedBefore") === "true" ? 1 : 0,
           controls: 1,
         },
         events: {
-          onStateChange: onPlayerStateChange,
-          onReady: function () {
-            // Có thể thêm xử lý nếu cần
-          },
-        },
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange
+        }
       });
+    }
+
+    function onPlayerReady(event) {
+      // Có thể thêm lệnh nếu muốn tự động play hoặc chỉnh âm lượng
     }
 
     function onPlayerStateChange(event) {
