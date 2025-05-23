@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>❤️ Thiều Bảo Trâm ❤️</title>
+  <title>Yêu Thương Thiều Bảo Trâm ❤️</title>
   <style>
     body {
       margin: 0;
@@ -13,34 +13,61 @@
     }
 
     h2 {
-      text-align: left;
       color: white;
-      padding: 20px 0 10px 30px;
-      margin: 0;
+      padding: 20px;
+      text-align: left;
+      margin-left: 40px;
     }
 
-    .video-wrapper {
-      display: flex;
-      justify-content: flex-start;
-      padding-left: 30px;
-    }
-
-    iframe {
-      border: none;
+    #player {
+      margin-left: 40px;
+      width: 640px;
+      height: 390px;
     }
   </style>
 </head>
 <body>
   <h2>Yêu Thương Thiều Bảo Trâm Rất Rất Nhiều ❤️</h2>
+  <div id="player"></div>
 
-  <div class="video-wrapper">
-    <iframe width="640" height="390"
-      src="https://www.youtube.com/embed/ja9M5ACMBEQ"
-      title="❤️ Của Trâm - Do Trâm - Vì Trâm ❤️"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allowfullscreen>
-    </iframe>
-  </div>
+  <!-- Nhúng YouTube IFrame API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    let player;
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '390',
+        width: '640',
+        videoId: 'ja9M5ACMBEQ',
+        playerVars: {
+          autoplay: 1,
+          mute: 1,
+          controls: 1,
+          rel: 0
+        },
+        events: {
+          onReady: onPlayerReady
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      event.target.playVideo();
+      gradualVolumeUp();
+    }
+
+    function gradualVolumeUp() {
+      let volume = 0;
+      const interval = setInterval(() => {
+        if (volume >= 100) {
+          clearInterval(interval);
+          return;
+        }
+        volume += 5;
+        player.setVolume(volume);
+      }, 400); // tăng mỗi 400ms
+    }
+  </script>
 </body>
 </html>
