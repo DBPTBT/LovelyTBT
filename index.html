@@ -26,27 +26,46 @@
       height: 390px;
       z-index: 1;
     }
+
+    #countdown-bar {
+      width: 640px;
+      height: 8px;
+      background-color: rgba(255, 255, 255, 0.3);
+      margin: 0 20px;
+      border-radius: 5px;
+      overflow: hidden;
+      display: none;
+    }
+
+    #countdown-fill {
+      height: 100%;
+      background-color: #00ff88;
+      width: 100%;
+      transition: width 1s linear;
+    }
   </style>
 </head>
 <body>
   <h2>Yêu Thương Thiều Bảo Trâm Rất Rất Nhiều ❤️</h2>
   <div id="player"></div>
+  <div id="countdown-bar">
+    <div id="countdown-fill"></div>
+  </div>
 
   <!-- YouTube IFrame API -->
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     let player;
-    let hasReloaded = false;
 
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('player', {
         height: '390',
         width: '640',
-        videoId: 'ja9M5ACMBEQ', // ID video chính
+        videoId: 'ja9M5ACMBEQ',
         playerVars: {
           autoplay: 1,
           controls: 1,
-          mute: 0 // không tắt tiếng
+          mute: 0
         },
         events: {
           onReady: onPlayerReady,
@@ -56,18 +75,31 @@
     }
 
     function onPlayerReady(event) {
-      event.target.setVolume(50); // đảm bảo âm lượng >= 50%
+      event.target.setVolume(50);
       event.target.playVideo();
     }
 
     function onPlayerStateChange(event) {
-      // Nếu video kết thúc
-      if (event.data === YT.PlayerState.ENDED && !hasReloaded) {
-        hasReloaded = true;
-        setTimeout(() => {
-          location.reload(); // Reload sau 10s
-        }, 10000); 
+      if (event.data === YT.PlayerState.ENDED) {
+        startCountdown();
       }
+    }
+
+    function startCountdown() {
+      const bar = document.getElementById('countdown-bar');
+      const fill = document.getElementById('countdown-fill');
+      bar.style.display = 'block';
+
+      let duration = 10;
+      let interval = setInterval(() => {
+        duration--;
+        fill.style.width = `${(duration / 10) * 100}%`;
+
+        if (duration <= 0) {
+          clearInterval(interval);
+          window.location.href = "https://dbptbt.github.io/LovelyTBT/";
+        }
+      }, 1000);
     }
   </script>
 </body>
