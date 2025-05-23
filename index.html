@@ -14,15 +14,17 @@
 
     h2 {
       color: white;
-      padding: 20px;
       text-align: left;
-      margin-left: 40px;
+      padding: 20px;
+      font-size: 24px;
+      text-shadow: 1px 1px 2px black;
     }
 
     #player {
-      margin-left: 40px;
+      margin: 20px;
       width: 640px;
       height: 390px;
+      z-index: 1;
     }
   </style>
 </head>
@@ -30,43 +32,42 @@
   <h2>Yêu Thương Thiều Bảo Trâm Rất Rất Nhiều ❤️</h2>
   <div id="player"></div>
 
-  <!-- Nhúng YouTube IFrame API -->
+  <!-- YouTube IFrame API -->
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     let player;
+    let hasReloaded = false;
 
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('player', {
         height: '390',
         width: '640',
-        videoId: 'ja9M5ACMBEQ',
+        videoId: 'ja9M5ACMBEQ', // ID video chính
         playerVars: {
           autoplay: 1,
-          mute: 1,
           controls: 1,
-          rel: 0
+          mute: 0 // không tắt tiếng
         },
         events: {
-          onReady: onPlayerReady
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange
         }
       });
     }
 
     function onPlayerReady(event) {
+      event.target.setVolume(50); // đảm bảo âm lượng >= 50%
       event.target.playVideo();
-      gradualVolumeUp();
     }
 
-    function gradualVolumeUp() {
-      let volume = 0;
-      const interval = setInterval(() => {
-        if (volume >= 100) {
-          clearInterval(interval);
-          return;
-        }
-        volume += 5;
-        player.setVolume(volume);
-      }, 400); // tăng mỗi 400ms
+    function onPlayerStateChange(event) {
+      // Nếu video kết thúc
+      if (event.data === YT.PlayerState.ENDED && !hasReloaded) {
+        hasReloaded = true;
+        setTimeout(() => {
+          location.reload(); // Reload sau 10s
+        }, 10000); 
+      }
     }
   </script>
 </body>
